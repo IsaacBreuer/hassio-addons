@@ -37,6 +37,6 @@
     "frequency": "int",
     "gain": "int",
     "frequency_offset": "int" ,
-    "list_rid_sensorname" "srt"
+    "list_rid_sensorname" : "srt"
    }
 }
