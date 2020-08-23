@@ -25,7 +25,7 @@
     "frequency": 319500000,
     "gain": 60,
     "frequency_offset": 350,
-    "" : ""
+    "list_rid_sensorname" : ""
   },
   "schema":
   {
