@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 # A simple script that will receive events from an RTL433 SDR and resend the data via MQTT
 
 # Author: Chris Kacerguis <chriskacerguis@gmail.com>
@@ -168,6 +167,7 @@ PROTOCOL="$(jq --raw-output '.protocol' $CONFIG_PATH)"
 FREQUENCY="$(jq --raw-output '.frequency' $CONFIG_PATH)"
 GAIN="$(jq --raw-output '.gain' $CONFIG_PATH)"
 OFFSET="$(jq --raw-output '.frequency_offset' $CONFIG_PATH)"
+DEVICELIST="$(jq --raw-output '.list_mqtttopic' $CONFIG_PATH)"
 
 # Start the listener and enter an endless loop
 echo "Starting RTL_433 with parameters:"
@@ -179,25 +179,90 @@ echo "RTL_433 Protocol =" $PROTOCOL
 echo "RTL_433 Frequency =" $FREQUENCY
 echo "RTL_433 Gain =" $GAIN
 echo "RTL_433 Frequency Offset =" $OFFSET
+echo "Device List =" $DEVICELIST
+
+# get list of devices
+IFS=',' read -ra my_array <<< "$DEVICELIST"
+
+#Print the split string
+for i in "${my_array[@]}"
+do
+    #echo $i
+	IFS=':' read -ra my_array2 <<< "${i}"
+	echo "device " ${my_array2[0]} ,  "rid " ${my_array2[1]}
+	temptopic="homeassistant/sensor/${my_array2[0]}T/config"
+	humiodtopic="homeassistant/sensor/${my_array2[0]}H/config"
+	
+
+temptpayload='{"unit_of_measurement": "°C","device_class": "temperature", "value_template": "{{ value_json.temperature_C }}","state_topic": "homeassistant/sensor/'${my_array2[0]}'/state","json_attributes_topic": "homeassistant/sensor/'${my_array2[0]}'/state","name": "'${my_array2[0]}'","unique_id": "'${my_array2[0]}'","device": {"identifiers": "'${my_array2[0]}'","name": "'${my_array2[0]}'"}}'
+	
+	
+	
+	#temptpayload='{"device_class": "temperature", "name": "'${my_array2[0]}'t", "state_topic": "homeassistant/sensor/'${my_array2[0]}'/state", "platform": "mqtt","unit_of_measurement": "°C", "val_tpl": "{{value_json['temperature_C']}}",'$deviceid'}'
+	#humidspayload='{"device_class": "humidity", "name": "hhumidity'${my_array2[0]}'t", "state_topic": "homeassistant/sensor/'${my_array2[0]}'/state", "unit_of_measurement": "%", "value_template": "{{ value_json.humidity}}" }'
+	
+	
+	echo $temptpayload
+echo $temptpayload | /usr/bin/mosquitto_pub -h $MQTT_HOST -u $MQTT_USER -P $MQTT_PASS -i RTL_433 -r -l -t $temptopic
+
+#echo $humidspayload | /usr/bin/mosquitto_pub -h $MQTT_HOST -u $MQTT_USER -P $MQTT_PASS -i RTL_433 -r -l -t $humiodtopic
+
+
+
+
+
+
+done
+
 
 #set -x  ## uncomment for MQTT logging...
 
 /usr/local/bin/rtl_433 -F json -R $PROTOCOL -f $FREQUENCY -g $GAIN -p $OFFSET | while read line
-
 do
+newval="$(echo ${line//LOW/GOOD})"
+newval="$(echo ${newval//OK/LOW})"
+#newval="$(echo sed -e '$line/OK/~~/g; $line/LOW/OK/g; $line/~~/LOW/g')"
+
+#echo "below below blwo"temptopic
+echo $newval
+
   DEVICE="$(echo $line | jq --raw-output '.model' | tr -s ' ' '_')" # replace ' ' with '_'
-  DEVICEID="$(echo $line | jq --raw-output '.id' | tr -s ' ' '_')"
+  #yab added this to make a seprate mqtt for each device, so we can get seprate atributes
+  DEVICERID="$(echo $line | jq --raw-output '.rid' | tr -s ' ' '_')"
 
   MQTT_PATH=$MQTT_TOPIC
 
-  if [ ${#DEVICE} > 0 ]; then
-    MQTT_PATH=$MQTT_PATH/"$DEVICE"
+  if [ ${#DEVICERID} > 0 ]; then
+   	MQTT_PATH=$MQTT_PATH/"$DEVICERID"
   fi
-  if [ ${#DEVICEID} > 0 ]; then
-    MQTT_PATH=$MQTT_PATH/"$DEVICEID"
-  fi
+  
+  
+  # get list of devices
+IFS=',' read -ra my_array <<< "$DEVICELIST"
+
+foundit='false'
+for i in "${my_array[@]}"
+do
+    #echo $i
+	IFS=':' read -ra my_array2 <<< "${i}"
+	if [[ ${DEVICERID} == ${my_array2[1]} ]]; then
+	
+	echo "device " ${my_array2[0]} ,  "rid " ${my_array2[1]}
+	foundit='true'
+	 MQTT_PATH='homeassistant/sensor/'${my_array2[0]}'/state'
+	break 
+	fi
+done
+	if [[ $foundit == "false" ]] ;  then
+	MQTT_PATH=' homeassistant/sensor/tempo/'"$DEVICERID"
+	fi
+	
+  
 
   # Create file with touch /tmp/rtl_433.log if logging is needed
-  [ -w /tmp/rtl_433.log ] && echo $line >> rtl_433.log
-  echo $line | /usr/bin/mosquitto_pub -h $MQTT_HOST -u $MQTT_USER -P $MQTT_PASS -i RTL_433 -r -l -t $MQTT_PATH
+  [ -w /tmp/rtl_433.log ] && echo $newval >> rtl_433.log
+ 
+  echo $newval | /usr/bin/mosquitto_pub -h $MQTT_HOST -u $MQTT_USER -P $MQTT_PASS -i RTL_433 -r -l -t $MQTT_PATH
+ # echo $newval | /usr/bin/mosquitto_pub -h $MQTT_HOST -u $MQTT_USER -P $MQTT_PASS -i RTL_433 -r -l -t homeassistant/sensor/boysrooom/state
+  
 done
