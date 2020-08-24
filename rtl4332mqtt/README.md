@@ -1,4 +1,11 @@
 # RTL433 to MQTT Bridge hass.io addon
+mqtt auto discovery for dg-r8s cheap sensor
+https://www.banggood.com/search/dg-r8s.html
+
+just add nmae:id and it will automatily add this sensor if you have mqtt discovery on
+
+use uiniquw name as discovery
+will not add if that name is already used
 A hass.io addon for a software defined radio tuned to listen for 433MHz RF transmissions and republish the data via MQTT
 
 This hass.io addon is based on Chris Kacerguis' project here: https://github.com/chriskacerguis/honeywell2mqtt,
