@@ -1,4 +1,5 @@
-# RTL433 to MQTT Bridge hass.io addon
+# RTL433 to MQTT Bridge hass.io addon With auto  dynamic discovery 
+
 mqtt auto discovery for dg-r8s cheap sensor
 https://www.banggood.com/search/dg-r8s.html
 
