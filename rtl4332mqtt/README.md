@@ -2,10 +2,9 @@
 mqtt auto discovery for dg-r8s cheap sensor
 https://www.banggood.com/search/dg-r8s.html
 
-just add nmae:id and it will automatily add this sensor if you have mqtt discovery on
+just add name:id and it will automatily add this sensor if you have mqtt discovery on
 
-use uiniquw name as discovery
-will not add if that name is already used
+use unique name as discovery will not add if that name is already used
 A hass.io addon for a software defined radio tuned to listen for 433MHz RF transmissions and republish the data via MQTT
 
 This hass.io addon is based on Chris Kacerguis' project here: https://github.com/chriskacerguis/honeywell2mqtt,
@@ -21,6 +20,9 @@ which is in turn based on Marco Verleun's rtl2mqtt image here: https://github.co
 - mqtt_password
 - mqtt_topic
 - protocol (see https://github.com/merbanan/rtl_433 for more details inc protocol IDs)
+- list youre name of sensor you want to create and the rid for that sensor, 
+
+i have create a automation in my hass thet will alert with the rid if the button is pressed, so when changing berrtryis you just press the button and get the new rid , enter it the the addon config restart the addon and done.
 
 3) Copy rtl2mqtt.sh to your hass.io config dir in a subdir called rtl4332mqtt.
 i.e.
