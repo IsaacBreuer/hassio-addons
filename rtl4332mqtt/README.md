@@ -35,15 +35,7 @@ This allows you to edit the start script if you need to make any changes
 
 ## MQTT Data
 ```json
-time: 2020-08-27 14:36:34
-model : Prologue sensor
-id : 9
-rid :52
-channel :1
-battery : GOOD
-button :0
-temperature C :26.9
-humidity :51
+{"time" : "2020-08-27 18:45:44", "model" : "Prologue sensor", "id" : 9, "rid" : 52, "channel" : 1, "battery" : "GOOD", "button" : 0, "temperature_C" : 22.700, "humidity" : 56}
 ```
 
 ## Troubleshooting
