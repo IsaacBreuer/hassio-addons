@@ -35,7 +35,7 @@
     "mqtt_topic": "str",
     "protocol": "int",
     "frequency": "int",
-    "gain": "int",
+    "gain": "float",
     "frequency_offset": "int",
     "list_mqtttopic": "str"
    }
