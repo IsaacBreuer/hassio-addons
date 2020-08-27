@@ -34,47 +34,15 @@ This allows you to edit the start script if you need to make any changes
 
 ## MQTT Data
 
-Data to the MQTT server will depend on the protocol.
-Chris tested Honeywell devices and the JSON is as follows:
-
-```json
-{
-    "time" : "2017-08-17 13:18:58",
-    "model" : "Honeywell Door/Window Sensor",
-    "id" : 547651,
-    "channel" : 8,
-    "event" : 4,
-    "state" : "closed",
-    "heartbeat" : "yes"
-}
-```
-
-I have tested CurrentCost devices and the JSON is as follows:
-
-```json
-{
-    "time" : "2017-10-16 20:53:09",
-    "model" : "CurrentCost TX",
-    "dev_id" : 3063,
-    "power0" : 617,
-    "power1" : 0,
-    "power2" : 0
-}
-```
-
-## Hardware
-
-This has been tested and used with the following hardware (you can get it on Amazon)
-
-Chris:
-- Honeywell Ademco 5818MNL Recessed Door Transmitter
-- 5800MINI Wireless Door/Window Contact by Honeywell
-- NooElec NESDR Nano 2+ Tiny Black RTL-SDR USB
-
-Me:
-- CurrentCost TX: http://www.ebay.co.uk/itm/Current-Cost-Envi-R-Energy-Monitor-Smart-Electric-Meter-/152084708754
-- Super cheap RTL dongle: http://www.ebay.co.uk/itm/Mini-USB-DVB-T-RTL-SDR-Realtek-RTL2832U-R820T-Stick-Receiver-Dongle-MCX-Input-PK/222637370515
-
+time: 2020-08-27 14:36:34
+model : Prologue sensor
+id : 9
+rid :52
+channel :1
+battery : GOOD
+button :0
+temperature C :26.9
+humidity :51
 
 ## Troubleshooting
 
