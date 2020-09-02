@@ -194,18 +194,18 @@ do
 	humiodtopic="homeassistant/sensor/${my_array2[0]}H/config"
 	
 
-temptpayload='{"unit_of_measurement": "°C","device_class": "temperature", "value_template": "{{ value_json.temperature_C }}","state_topic": "homeassistant/sensor/'${my_array2[0]}'/state","json_attributes_topic": "homeassistant/sensor/'${my_array2[0]}'/state","name": "'${my_array2[0]}'","unique_id": "'${my_array2[0]}'","device": {"identifiers": "'${my_array2[0]}'","name": "'${my_array2[0]}'"}}'
+temptpayload='{"unit_of_measurement": "°C","force_update": true,"device_class": "temperature", "value_template": "{{ value_json.temperature_C }}","state_topic": "homeassistant/sensor/tempo/'${my_array2[0]}'/state","json_attributes_topic": "homeassistant/sensor/'${my_array2[0]}'/state","name": "'${my_array2[0]}'","unique_id": "'${my_array2[0]}'","device": {"identifiers": "'${my_array2[0]}'","name": "'${my_array2[0]}'"}}'
 	
 	
 	
 	#temptpayload='{"device_class": "temperature", "name": "'${my_array2[0]}'t", "state_topic": "homeassistant/sensor/'${my_array2[0]}'/state", "platform": "mqtt","unit_of_measurement": "°C", "val_tpl": "{{value_json['temperature_C']}}",'$deviceid'}'
-	#humidspayload='{"device_class": "humidity", "name": "hhumidity'${my_array2[0]}'t", "state_topic": "homeassistant/sensor/'${my_array2[0]}'/state", "unit_of_measurement": "%", "value_template": "{{ value_json.humidity}}" }'
+	humidspayload='{"unit_of_measurement": "°%","force_update": true,"device_class": "humidity", "value_template": "{{ value_json.humidity }}","state_topic": "homeassistant/sensor/tempo/'${my_array2[0]}'/state","json_attributes_topic": "homeassistant/sensor/'${my_array2[0]}'/state","name": "'${my_array2[0]}'_humid","unique_id": "'${my_array2[0]}a_humid'","device": {"identifiers": "'${my_array2[0]}'","name": "'${my_array2[0]}'"}}'
 	
 	
 	echo $temptpayload
 echo $temptpayload | /usr/bin/mosquitto_pub -h $MQTT_HOST -u $MQTT_USER -P $MQTT_PASS -i RTL_433 -r -l -t $temptopic
 
-#echo $humidspayload | /usr/bin/mosquitto_pub -h $MQTT_HOST -u $MQTT_USER -P $MQTT_PASS -i RTL_433 -r -l -t $humiodtopic
+echo $humidspayload | /usr/bin/mosquitto_pub -h $MQTT_HOST -u $MQTT_USER -P $MQTT_PASS -i RTL_433 -r -l -t $humiodtopic
 
 
 
@@ -249,13 +249,13 @@ do
 	
 	echo "device " ${my_array2[0]} ,  "rid " ${my_array2[1]}
 	foundit='true'
-	 MQTT_PATH='homeassistant/sensor/'${my_array2[0]}'/state'
+	 MQTT_PATH='homeassistant/sensor/tempo/'${my_array2[0]}'/state'
 	break 
 	fi
 done
-	if [[ $foundit == "false" ]] ;  then
-	MQTT_PATH=' homeassistant/sensor/tempo/'"$DEVICERID"
-	fi
+	#if [[ $foundit == "false" ]] ; # then
+	#MQTT_PATH=' homeassistant/sensor/tempo/'"$DEVICERID"
+	#fi
 	
   
 
